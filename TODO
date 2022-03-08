@@ -1,6 +1,3 @@
-- znaci treba novi places.js da se doda, u njemu objekti gradovi, u njima niz place koji je tipa objekat sa title i niz objekata
-koji sadrzi tip(slika ili tekst) i vrednost
-
 - tacka crvena ima abbr title taj i klikom na nju se otvara modal koji to sve prikazuje
 
 - u default-u switcha staviti da se popunjava sa tackicama
