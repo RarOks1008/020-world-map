@@ -9,7 +9,7 @@ window.addEventListener('load', function () {
 function back_button_click() {
     shown = previous_shown;
     previous_shown = 'continents';
-    custom_transition(true);
+    custom_transition();
 }
 
 function button_show(should_show) {
@@ -26,12 +26,12 @@ function button_show(should_show) {
     document.body.appendChild(btn);
 }
 
-function custom_transition(is_continent) {
+function custom_transition() {
     button_show(false);
-    fade_in_out(false, is_continent);
+    fade_in_out(false);
 }
 
-function fade_in_out(isFadeIn, is_continent) {
+function fade_in_out(isFadeIn) {
     if (fadeEf) {
         clearInterval(fadeEf);
         fadeEf = null;
@@ -51,8 +51,7 @@ function fade_in_out(isFadeIn, is_continent) {
         clearInterval(fadeEf);
         fadeEf = null;
         if (!isFadeIn) {
-            if (is_continent) document.getElementById("svg_holder").innerHTML = svgs[shown];
-            if (!is_continent) document.getElementById("svg_holder").innerHTML = countrie_svgs[shown];
+            document.getElementById("svg_holder").innerHTML = svgs[shown];
             add_func();
             fade_in_out(true);
             return;
@@ -114,7 +113,7 @@ function element_click(prev_shown, cust_trans, e) {
     if (!elid) return;
     previous_shown = prev_shown;
     shown = elid;
-    custom_transition(cust_trans);
+    custom_transition();
 }
 
 function add_func() {
