@@ -1,13 +1,19 @@
-- u default-u switcha staviti da se popunjava sa tackicama
+- sve iz css-a da se prebaci u kod, tako da se koriste samo js fajlovi, a da se ne koriste css i html uopste
+
+- custom tag - samo taj jedan tag u koga se dodaje sve, a ne div sa idijem
+
+- external funkcije koje se pozivaju za prikaz drzave, kontinenta i sveta
+(tipa showContinent(continent) showCountry(country), showWorld())
+
 - znaci treba novi places.js da se doda, u njemu objekti gradovi, u njima niz place koji je tipa objekat sa title i niz objekata
 koji sadrzi tip(slika ili tekst) i vrednost
+
 - tacka crvena ima abbr title taj i klikom na nju se otvara modal koji to sve prikazuje
-- back button da se dodaje preko koda a ne u htmlu
-- custom tag - samo taj jedan tag u koga se dodaje sve, a ne div sa idijem
-- klasa, sve iz css-a da se prebaci u kod, tako da se koriste samo js fajlovi, a da se ne koriste css i html uopste
-- external funkcije koje se pozivaju za prikaz drzave, kontinenta i sveta
-- videti dal moze da se izbaci jquery i sve da se napise u vanili
-- pushovati na git
+
+- u default-u switcha staviti da se popunjava sa tackicama
+
+- sredi sve TODO komentare i fajlove i console.log
+
 - pronaci gde da se proda ovo
 
 <circle cx="239.9" cy="2095.5" id="2">

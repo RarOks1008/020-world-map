@@ -1,228 +1,209 @@
 var shown = 'continents',
-    previous_shown = '';
-$(document).ready(function() {
-    $("#svg_holder").html(svgs[shown]);
+    previous_shown = '',
+    fadeEf = null;
+window.addEventListener('load', function () {
+    document.getElementById("svg_holder").innerHTML = svgs[shown];
     add_func();
 });
 
+function back_button_click() {
+    shown = previous_shown;
+    previous_shown = 'continents';
+    custom_transition(true);
+}
+
+function button_show(should_show) {
+    var bckbtn = document.getElementById("back_btn");
+    if (!should_show && bckbtn) {
+        bckbtn.removeEventListener("click", back_button_click);
+        bckbtn.parentNode.removeChild(bckbtn);
+        return;
+    }
+    var btn = document.createElement("button");
+    btn.innerHTML = "Back";
+    btn.setAttribute("id", "back_btn");
+    btn.addEventListener("click", back_button_click);
+    document.body.appendChild(btn);
+}
+
 function custom_transition(is_continent) {
-    $("#back_btn").removeClass("back_btn_show");
-    $("body").fadeOut("slow", function() {
-        if (is_continent) $("#svg_holder").html(svgs[shown]);
-        if (!is_continent) $("#svg_holder").html(countrie_svgs[shown]);
-        $("body").fadeIn("slow", function() {
+    button_show(false);
+    fade_in_out(false, is_continent);
+}
+
+function fade_in_out(isFadeIn, is_continent) {
+    if (fadeEf) {
+        clearInterval(fadeEf);
+        fadeEf = null;
+    }
+    var fadeEl = document.getElementsByTagName("body")[0];
+    fadeEf = setInterval(function () {
+        if (!fadeEl.style.opacity && !isFadeIn) fadeEl.style.opacity = 1;
+        if (fadeEl.style.opacity > 0 && !isFadeIn) {
+            fadeEl.style.opacity = parseFloat(fadeEl.style.opacity) - 0.01;
+            return;
+        }
+        if (!fadeEl.style.opacity && isFadeIn) fadeEl.style.opacity = 0;
+        if (fadeEl.style.opacity < 1 && isFadeIn) {
+            fadeEl.style.opacity = parseFloat(fadeEl.style.opacity) + 0.01;
+            return;
+        }
+        clearInterval(fadeEf);
+        fadeEf = null;
+        if (!isFadeIn) {
+            if (is_continent) document.getElementById("svg_holder").innerHTML = svgs[shown];
+            if (!is_continent) document.getElementById("svg_holder").innerHTML = countrie_svgs[shown];
             add_func();
+            fade_in_out(true);
+            return;
+        }
+    }, 20);
+}
+
+function element_hover(children_class, second_children_class, e) {
+    if (!e) return;
+    var target = e.target || e.srcElement;
+    if (!target) return;
+    var id = target.id;
+    if (!id) return;
+    target.classList.add("svg_hover");
+    if (children_class) {
+        Array.from(target.children).forEach((el) => {
+            el.classList.add("svg_hover");
+            if (second_children_class) {
+                Array.from(el.children).forEach((eel) => {
+                    eel.classList.add("svg_hover");
+                });
+            }
         });
+    }
+}
+function element_hover_remove(children_class, second_children_class, e) {
+    if (!e) return;
+    var target = e.target || e.srcElement;
+    if (!target) return;
+    var id = target.id;
+    if (!id) return;
+    target.classList.remove("svg_hover");
+    if (children_class) {
+        Array.from(target.children).forEach((el) => {
+            el.classList.remove("svg_hover");
+            if (second_children_class) {
+                Array.from(el.children).forEach((eel) => {
+                    eel.classList.remove("svg_hover");
+                });
+            }
+        });
+    }
+}
+
+function get_id_from_path(path) {
+    var sid = '';
+    path.forEach((i) => {
+        if (sid) return;
+        if (!i.id) return;
+        sid = i.id;
     });
+    return sid;
+}
+
+function element_click(prev_shown, cust_trans, e) {
+    if (!e) return;
+    if (!e.path) return;
+    var elid = get_id_from_path(e.path);
+    if (!elid) return;
+    previous_shown = prev_shown;
+    shown = elid;
+    custom_transition(cust_trans);
 }
 
 function add_func() {
-    $("#svg_holder svg g").unbind("hover click");
-    $("#svg_holder svg g path").unbind("hover click");
-    $("#svg_holder svg path").unbind("hover click");
-    $("#back_btn").unbind("click");
-    if (shown != 'continents') {
-        $("#back_btn").addClass("back_btn_show");
-        $("#back_btn").click(
-            function() {
-                shown = previous_shown;
-                previous_shown = 'continents';
-                custom_transition(true);
-            });
-    }
+    document.querySelectorAll("#svg_holder svg g").forEach((el) => {
+        el.removeEventListener("mouseenter", element_hover);
+        el.removeEventListener("mouseleave", element_hover_remove);
+        el.removeEventListener("click", element_click);
+    });
+    document.querySelectorAll("#svg_holder svg g path").forEach((el) => {
+        el.removeEventListener("mouseenter", element_hover);
+        el.removeEventListener("mouseleave", element_hover_remove);
+        el.removeEventListener("click", element_click);
+    });
+    document.querySelectorAll("#svg_holder svg path").forEach((el) => {
+        el.removeEventListener("mouseenter", element_hover);
+        el.removeEventListener("mouseleave", element_hover_remove);
+        el.removeEventListener("click", element_click);
+    });
+    if (shown != 'continents') button_show(true);
 
     switch(shown) {
         case 'continents':
-            $("#svg_holder svg g").hover(
-                function() {
-                    if (!$(this).attr("data-id")) return;
-                    $(this).children().addClass("svg_hover");
-                },
-                function() {
-                    if (!$(this).attr("data-id")) return;
-                    $(this).children().removeClass("svg_hover");
-                });
-            $("#svg_holder svg g").click(
-                function() {
-                    if (!$(this).attr("data-id")) return;
-                    previous_shown = 'continents';
-                    shown = $(this).attr("data-id");
-                    custom_transition(true);
-                });
+            document.querySelectorAll("#svg_holder svg g").forEach((el) => {
+                el.addEventListener("mouseenter", element_hover.bind(null, true, false));
+                el.addEventListener("mouseleave", element_hover_remove.bind(null, true, false));
+                el.addEventListener("click", element_click.bind(null, "continents", true));
+            });
             return;
         case 'europe':
-            $("#svg_holder svg g path").hover(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).attr("class", "svg_hover");
-                },
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).attr("class", "");
-                });
-            $("#svg_holder svg g").hover(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).children().addClass("svg_hover");
-                },
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).children().removeClass("svg_hover");
-                });
-            $("#svg_holder svg g path").click(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    previous_shown = 'europe';
-                    shown = $(this).attr("id");
-                    custom_transition(false);
-                });
-            $("#svg_holder svg g").click(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    previous_shown = 'europe';
-                    shown = $(this).attr("id");
-                    custom_transition(false);
+            document.querySelectorAll("#svg_holder svg g").forEach((el) => {
+                el.addEventListener("mouseenter", element_hover.bind(null, true, false));
+                el.addEventListener("mouseleave", element_hover_remove.bind(null, true, false));
+                el.addEventListener("click", element_click.bind(null, "europe", false));
+            });
+            document.querySelectorAll("#svg_holder svg g path").forEach((el) => {
+                el.addEventListener("mouseenter", element_hover.bind(null, false, false));
+                el.addEventListener("mouseleave", element_hover_remove.bind(null, false, false));
+                el.addEventListener("click", element_click.bind(null, "europe", false));
             });
             return;
         case 'africa':
-            $("#svg_holder svg path").hover(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).attr("class", "svg_hover");
-                },
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).attr("class", "");
-                });
-            $("#svg_holder svg path").click(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    previous_shown = 'africa';
-                    shown = $(this).attr("id");
-                    custom_transition(false);
-                });
+            document.querySelectorAll("#svg_holder svg path").forEach((el) => {
+                el.addEventListener("mouseenter", element_hover.bind(null, false, false));
+                el.addEventListener("mouseleave", element_hover_remove.bind(null, false, false));
+                el.addEventListener("click", element_click.bind(null, "africa", false));
+            });
             return;
         case 'asia':
-            $("#svg_holder svg g").hover(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).children().addClass("svg_hover");
-                },
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).children().removeClass("svg_hover");
-                });
-            $("#svg_holder svg path").hover(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).attr("class", "svg_hover");
-                },
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).attr("class", "");
-                });
-            $("#svg_holder svg g").click(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    previous_shown = 'asia';
-                    shown = $(this).attr("id");
-                    custom_transition(false);
+            document.querySelectorAll("#svg_holder svg g").forEach((el) => {
+                el.addEventListener("mouseenter", element_hover.bind(null, true, false));
+                el.addEventListener("mouseleave", element_hover_remove.bind(null, true, false));
+                el.addEventListener("click", element_click.bind(null, "asia", false));
             });
-            $("#svg_holder svg path").click(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    previous_shown = 'asia';
-                    shown = $(this).attr("id");
-                    custom_transition(false);
-                });
+            document.querySelectorAll("#svg_holder svg path").forEach((el) => {
+                el.addEventListener("mouseenter", element_hover.bind(null, false, false));
+                el.addEventListener("mouseleave", element_hover_remove.bind(null, false, false));
+                el.addEventListener("click", element_click.bind(null, "asia", false));
+            });
             return;
         case 'northamerica':
-            $("#svg_holder svg g").hover(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).children().addClass("svg_hover");
-                },
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).children().removeClass("svg_hover");
-                });
-            $("#svg_holder svg path").hover(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).attr("class", "svg_hover");
-                },
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).attr("class", "");
-                });
-            $("#svg_holder svg g").click(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    previous_shown = 'northamerica';
-                    shown = $(this).attr("id");
-                    custom_transition(false);
+            document.querySelectorAll("#svg_holder svg g").forEach((el) => {
+                el.addEventListener("mouseenter", element_hover.bind(null, true, false));
+                el.addEventListener("mouseleave", element_hover_remove.bind(null, true, false));
+                el.addEventListener("click", element_click.bind(null, "northamerica", false));
             });
-            $("#svg_holder svg path").click(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    previous_shown = 'northamerica';
-                    shown = $(this).attr("id");
-                    custom_transition(false);
-                });
+            document.querySelectorAll("#svg_holder svg path").forEach((el) => {
+                el.addEventListener("mouseenter", element_hover.bind(null, false, false));
+                el.addEventListener("mouseleave", element_hover_remove.bind(null, false, false));
+                el.addEventListener("click", element_click.bind(null, "northamerica", false));
+            });
             return;
         case 'southamerica':
-            $("#svg_holder svg g").hover(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).children().addClass("svg_hover");
-                },
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).children().removeClass("svg_hover");
-            });
-            $("#svg_holder svg g").click(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    previous_shown = 'southamerica';
-                    shown = $(this).attr("id");
-                    custom_transition(false);
+            document.querySelectorAll("#svg_holder svg g").forEach((el) => {
+                el.addEventListener("mouseenter", element_hover.bind(null, true, false));
+                el.addEventListener("mouseleave", element_hover_remove.bind(null, true, false));
+                el.addEventListener("click", element_click.bind(null, "southamerica", false));
             });
             return;
         case 'australiaoceania':
-            $("#svg_holder svg g").hover(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).children().children().addClass("svg_hover");
-                    $(this).children().addClass("svg_hover");
-                },
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).children().children().removeClass("svg_hover");
-                    $(this).children().removeClass("svg_hover");
+            document.querySelectorAll("#svg_holder svg g").forEach((el) => {
+                el.addEventListener("mouseenter", element_hover.bind(null, true, true));
+                el.addEventListener("mouseleave", element_hover_remove.bind(null, true, true));
+                el.addEventListener("click", element_click.bind(null, "australiaoceania", false));
             });
-            $("#svg_holder svg path").hover(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).attr("class", "svg_hover");
-                },
-                function() {
-                    if (!$(this).attr("id")) return;
-                    $(this).attr("class", "");
-                });
-            $("#svg_holder svg g").click(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    previous_shown = 'australiaoceania';
-                    shown = $(this).attr("id");
-                    custom_transition(false);
+            document.querySelectorAll("#svg_holder svg path").forEach((el) => {
+                el.addEventListener("mouseenter", element_hover.bind(null, false, false));
+                el.addEventListener("mouseleave", element_hover_remove.bind(null, false, false));
+                el.addEventListener("click", element_click.bind(null, "australiaoceania", false));
             });
-            $("#svg_holder svg path").click(
-                function() {
-                    if (!$(this).attr("id")) return;
-                    previous_shown = 'australiaoceania';
-                    shown = $(this).attr("id");
-                    custom_transition(false);
-                });
             return;
         default:
             console.log(shown);
