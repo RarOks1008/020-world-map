@@ -1,7 +1,3 @@
-- sve iz css-a da se prebaci u kod, tako da se koriste samo js fajlovi, a da se ne koriste css i html uopste
-
-- custom tag - samo taj jedan tag u koga se dodaje sve, a ne div sa idijem
-
 - external funkcije koje se pozivaju za prikaz drzave, kontinenta i sveta
 (tipa showContinent(continent) showCountry(country), showWorld())
 
