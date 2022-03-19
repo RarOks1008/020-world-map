@@ -1,6 +1,4 @@
-TODO Ne zaboravi da napravis gif kako radi, ne mora vise slika
+TODO Ne zaboravi da napravis gif kako radi, ne mora vise slika i dodaj ga na pocetku u view submenu u readme
 
-napisi kako se koristi
 
-daj primer onog krusevac json-a
 napisi kako se koriste globalne funckije showContinent(continent) showCountry(country) showWorld()  getCurrentLocation()

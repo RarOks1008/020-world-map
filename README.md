@@ -6,8 +6,29 @@
 ## Add-on Design
 
 ### *View*
+![View](git-image/image5.png)
 
 Example showing how the add-on works.
+
+### *Earth View*
+![Earth View](git-image/image1.png)
+
+Initial, Earth view with hover option.
+
+### *Continent View*
+![Continent View](git-image/image2.png)
+
+View when a continent is selected.
+
+### *Country View*
+![Country View](git-image/image3.png)
+
+View when a country is selected.
+
+### *Location View*
+![Location View](git-image/image4.png)
+
+View when a location is selected.
 
 ## Other remarks
 
