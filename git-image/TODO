@@ -1,2 +1,6 @@
 TODO Ne zaboravi da napravis gif kako radi, ne mora vise slika
-Primer uraditi sa Krusevcom
+
+napisi kako se koristi
+
+daj primer onog krusevac json-a
+napisi kako se koriste globalne funckije showContinent(continent) showCountry(country) showWorld()  getCurrentLocation()
