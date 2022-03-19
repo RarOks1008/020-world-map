@@ -66,3 +66,8 @@ View when a location is selected.
    ]
 }
 ```
+- there are a few global functions which a user can easily use:
+  - *getCurrentLocation()* - gives a string with the name of location (example: **continents**, **europe**, **Serbia**)
+  - *showWorld()* - opens the initial, Earth view
+  - *showContinent(continent)* - opens a specific continent, example **europe**
+  - *showCountry(country)* - opens a specific country, example **Serbia**
