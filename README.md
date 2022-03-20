@@ -6,7 +6,7 @@
 ## Add-on Design
 
 ### *View*
-![View](git-image/image5.png)
+![View](git-image/image5.gif)
 
 Example showing how the add-on works.
 
